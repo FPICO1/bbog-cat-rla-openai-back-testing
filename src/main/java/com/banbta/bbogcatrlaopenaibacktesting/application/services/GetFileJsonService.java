@@ -1,49 +1,42 @@
 package com.banbta.bbogcatrlaopenaibacktesting.application.services;
 
-
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.GetFileJsonRequestDTO;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class GetFileJsonService {
 
     private final WebClient webClient;
-    private final ObjectMapper objectMapper;
+    private final Gson gson = new Gson();
 
-    public GetFileJsonService(WebClient.Builder webClientBuilder, ObjectMapper objectMapper) {
-        this.webClient = webClientBuilder.baseUrl("https://znr46ipcj3.execute-api.us-east-1.amazonaws.com/qa").build();
-        this.objectMapper = objectMapper;
+    // Endpoint del API Gateway
+    private static final String PATH = "/downloadFileJson";
+
+    @Autowired
+    public GetFileJsonService(WebClient webClient) {
+        this.webClient = webClient;
     }
 
-    public Mono<JsonNode> getFileJson(GetFileJsonRequestDTO request) {
+    public Mono<JsonObject> downloadFileJson(GetFileJsonRequestDTO requestDTO) {
         return webClient.post()
-                .uri("/downloadFileJson")
-                .bodyValue(request)
+                .uri("/downloadFileJson") // Asegúrate de que esta URI sea correcta
+                .bodyValue(requestDTO) // Enviar el requestDTO como cuerpo
                 .retrieve()
                 .bodyToMono(String.class)
-                .map(response -> {
-                    try {
-                        // Convertir el response completo a un JsonNode
-                        JsonNode jsonResponse = objectMapper.readTree(response);
-
-                        // Verificar si "body" está presente y no es null
-                        if (jsonResponse.has("body") && !jsonResponse.get("body").isNull()) {
-                            // Obtener el contenido de "body" como String
-                            String bodyString = jsonResponse.get("body").asText();
-                            // Convertir el contenido del "body" de String a JsonNode
-                            return objectMapper.readTree(bodyString);
-                        } else {
-                            // Loguear y lanzar excepción si no está "body"
-                            System.out.println("Respuesta completa del API Gateway (sin 'body' o null): " + response);
-                            throw new IllegalArgumentException("El campo 'body' no está presente o es null en la respuesta.");
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error procesando el response", e);
-                    }
-                });
+                .map(responseBody -> {
+                    log.info("Respuesta del API Gateway: {}", responseBody);
+                    System.out.println("Respuesta del API Gateway: {}" + responseBody);
+                    return gson.fromJson(responseBody, JsonObject.class);
+                })
+                .doOnError(e -> log.error("Error al consumir el endpoint del API Gateway: {}", e.getMessage()));
     }
+
+
 }
