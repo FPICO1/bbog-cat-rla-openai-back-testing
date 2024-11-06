@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -27,7 +26,7 @@ public class GetFileJsonFunction {
     }
 
     @Bean
-    public Function<GetFileJsonRequestDTO, Mono<GetFileJsonResponseDTO>> downloadFileJson() {
+    public Function<GetFileJsonRequestDTO, GetFileJsonResponseDTO> downloadFileJson() {
         return requestDTO -> {
             GetFileJsonResponseDTO responseDTO = new GetFileJsonResponseDTO();
             responseDTO.setHeaders(Map.of("Content-Type", "application/json")); // Definir encabezados
@@ -37,27 +36,22 @@ public class GetFileJsonFunction {
             if (requestDTO == null) {
                 responseDTO.setBody("{\"message\": \"Error: No request data found\"}");
                 responseDTO.setStatusCode(400);
-                return Mono.just(responseDTO);
+                return responseDTO;
             } else {
-                return getFileJsonService.downloadFileJson(requestDTO)
-                        .map(jsonObject -> {
-                            if (jsonObject != null) {
-                                responseDTO.setBody(gson.toJson(jsonObject));
-                                responseDTO.setStatusCode(200);
-                            } else {
-                                responseDTO.setBody("{\"message\": \"Error: No data returned from API Gateway\"}");
-                                responseDTO.setStatusCode(404);
-                            }
-                            return responseDTO; // Retornar el responseDTO
-                        })
-                        .onErrorResume(error -> {
-                            responseDTO.setBody("{\"message\": \"Error: " + error.getMessage() + "\"}");
-                            responseDTO.setStatusCode(500);
-                            return Mono.just(responseDTO); // Retornar el responseDTO
-                        });
+                // Llama al servicio para obtener el JSON desde el API Gateway
+                JsonObject jsonObject = getFileJsonService.downloadFileJson(requestDTO);
+                System.out.println("JSON Object: " + gson.toJson(jsonObject));
+
+                if (jsonObject != null) {
+                    responseDTO.setBody(gson.toJson(jsonObject));
+                    responseDTO.setStatusCode(200);
+                } else {
+                    responseDTO.setBody("{\"message\": \"Error: No data returned from API Gateway\"}");
+                    responseDTO.setStatusCode(404);
+                }
+
+                return responseDTO; // Retornar el responseDTO
             }
         };
     }
-
-
 }

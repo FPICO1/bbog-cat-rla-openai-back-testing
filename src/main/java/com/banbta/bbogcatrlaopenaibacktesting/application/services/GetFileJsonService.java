@@ -24,19 +24,25 @@ public class GetFileJsonService {
         this.webClient = webClient;
     }
 
-    public Mono<JsonObject> downloadFileJson(GetFileJsonRequestDTO requestDTO) {
-        return webClient.post()
-                .uri("/downloadFileJson") // Asegúrate de que esta URI sea correcta
-                .bodyValue(requestDTO) // Enviar el requestDTO como cuerpo
-                .retrieve()
-                .bodyToMono(String.class)
-                .map(responseBody -> {
-                    log.info("Respuesta del API Gateway: {}", responseBody);
-                    System.out.println("Respuesta del API Gateway: {}" + responseBody);
-                    return gson.fromJson(responseBody, JsonObject.class);
-                })
-                .doOnError(e -> log.error("Error al consumir el endpoint del API Gateway: {}", e.getMessage()));
+    public JsonObject downloadFileJson(GetFileJsonRequestDTO requestDTO) {
+        try {
+            // Hacer la solicitud POST al API Gateway
+            String responseBody = webClient.post()
+                    .uri("/downloadFileJson") // Asegúrate de que esta URI sea correcta
+                    .bodyValue(requestDTO) // Enviar el requestDTO como cuerpo
+                    .retrieve()
+                    .bodyToMono(String.class) // Obtener la respuesta como String
+                    .block(); // Bloquear hasta que se complete la solicitud
+
+            log.info("Respuesta del API Gateway: {}", responseBody);
+            return gson.fromJson(responseBody, JsonObject.class); // Convertir la respuesta a JsonObject
+
+        } catch (Exception e) {
+            log.error("Error al consumir el endpoint del API Gateway: {}", e.getMessage());
+            return null; // Manejo de errores: retornar null o manejar según tu lógica
+        }
     }
+
 
 
 }

@@ -22,7 +22,6 @@ public class BbogCatRlaOpenaiBackTestingApplication {
         this.getFileJsonFunction = getFileJsonFunction;
     }
 
-
     public static void main(String[] args) {
         SpringApplication.run(BbogCatRlaOpenaiBackTestingApplication.class, args);
     }
@@ -37,14 +36,23 @@ public class BbogCatRlaOpenaiBackTestingApplication {
             if (path.equalsIgnoreCase("/downloadFileJson")) {
                 String body = (String) event.get("body");
                 GetFileJsonRequestDTO requestDTO = gson.fromJson(body, GetFileJsonRequestDTO.class);
-                GetFileJsonResponseDTO responseDTO = getFileJsonFunction.downloadFileJson().apply(requestDTO).block();
 
-                assert responseDTO != null;
-                return Map.of(
-                        "statusCode", responseDTO.getStatusCode(),
-                        "headers", responseDTO.getHeaders(),
-                        "body", responseDTO.getBody()
-                );
+                // Llama a la función de descarga directamente
+                GetFileJsonResponseDTO responseDTO = getFileJsonFunction.downloadFileJson().apply(requestDTO);
+
+                // Imprimir el responseDTO para depuración
+                System.out.println("Response DTO: " + gson.toJson(responseDTO));
+
+                // Asegúrate de que responseDTO no sea nulo
+                if (responseDTO != null) {
+                    return Map.of(
+                            "statusCode", responseDTO.getStatusCode(),
+                            "headers", responseDTO.getHeaders(),
+                            "body", responseDTO.getBody()
+                    );
+                } else {
+                    return Map.of("statusCode", 500, "body", "{\"message\": \"Error: Response DTO is null\"}");
+                }
             }
 
             return Map.of("message", "path no existente");
