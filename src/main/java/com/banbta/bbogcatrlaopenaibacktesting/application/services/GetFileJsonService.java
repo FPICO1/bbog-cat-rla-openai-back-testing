@@ -26,22 +26,42 @@ public class GetFileJsonService {
 
     public JsonObject downloadFileJson(GetFileJsonRequestDTO requestDTO) {
         try {
-            // Hacer la solicitud POST al API Gateway
             String responseBody = webClient.post()
-                    .uri("/downloadFileJson") // Asegúrate de que esta URI sea correcta
-                    .bodyValue(requestDTO) // Enviar el requestDTO como cuerpo
+                    .uri(PATH)
+                    .bodyValue(requestDTO)
                     .retrieve()
-                    .bodyToMono(String.class) // Obtener la respuesta como String
-                    .block(); // Bloquear hasta que se complete la solicitud
+                    .bodyToMono(String.class)
+                    .block();
 
             log.info("Respuesta del API Gateway: {}", responseBody);
-            return gson.fromJson(responseBody, JsonObject.class); // Convertir la respuesta a JsonObject
+
+            if (responseBody == null || responseBody.isEmpty()) {
+                log.error("Error: El cuerpo de respuesta está vacío o es nulo");
+                return new JsonObject();
+            }
+
+            JsonObject jsonResponse = gson.fromJson(responseBody, JsonObject.class);
+
+            // Verifica si jsonResponse contiene 'body'
+            if (jsonResponse == null || !jsonResponse.has("body")) {
+                log.error("Error: El cuerpo de respuesta no tiene el formato esperado");
+                return new JsonObject();
+            }
+
+            String bodyContentStr = jsonResponse.get("body").getAsString();
+            JsonObject bodyContent = gson.fromJson(bodyContentStr, JsonObject.class);
+
+            return bodyContent;
 
         } catch (Exception e) {
             log.error("Error al consumir el endpoint del API Gateway: {}", e.getMessage());
-            return null; // Manejo de errores: retornar null o manejar según tu lógica
+            return null;
         }
     }
+
+
+
+
 
 
 

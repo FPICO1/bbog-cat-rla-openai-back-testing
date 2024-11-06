@@ -33,17 +33,17 @@ public class BbogCatRlaOpenaiBackTestingApplication {
         return event -> {
             String path = (String) event.get("resource");
 
-            if (path.equalsIgnoreCase("/downloadFileJson")) {
+            if ("/downloadFileJson".equalsIgnoreCase(path)) {
                 String body = (String) event.get("body");
+
+                if (body == null) {
+                    return Map.of("statusCode", 400, "body", "{\"message\": \"Error: Body is null\"}");
+                }
+
                 GetFileJsonRequestDTO requestDTO = gson.fromJson(body, GetFileJsonRequestDTO.class);
 
-                // Llama a la función de descarga directamente
                 GetFileJsonResponseDTO responseDTO = getFileJsonFunction.downloadFileJson().apply(requestDTO);
 
-                // Imprimir el responseDTO para depuración
-                System.out.println("Response DTO: " + gson.toJson(responseDTO));
-
-                // Asegúrate de que responseDTO no sea nulo
                 if (responseDTO != null) {
                     return Map.of(
                             "statusCode", responseDTO.getStatusCode(),
@@ -55,7 +55,8 @@ public class BbogCatRlaOpenaiBackTestingApplication {
                 }
             }
 
-            return Map.of("message", "path no existente");
+            return Map.of("statusCode", 404, "body", "{\"message\": \"Path not found\"}");
         };
     }
+
 }
