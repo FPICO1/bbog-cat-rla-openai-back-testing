@@ -5,4 +5,5 @@ public class EndPointPaths {
 
     }
     public static final String GENERATE_REPORT = "/generateReport";
+    public static final String DOWNLOAD_FILE_JSON = "/downloadFileJson";
 }

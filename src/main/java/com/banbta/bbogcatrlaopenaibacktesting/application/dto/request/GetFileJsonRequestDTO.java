@@ -12,5 +12,4 @@ public class GetFileJsonRequestDTO {
     private String userName;
     private String moduleName;
 
-
 }

@@ -1,25 +1,27 @@
 package com.banbta.bbogcatrlaopenaibacktesting;
 
+import com.banbta.bbogcatrlaopenaibacktesting.application.common.EndPointPaths;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.GetFileJsonRequestDTO;
+import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.GenerateReportResponseDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.GetFileJsonResponseDTO;
-import com.banbta.bbogcatrlaopenaibacktesting.web.functions.GetFileJsonFunction;
-import com.google.gson.Gson;
+import com.banbta.bbogcatrlaopenaibacktesting.web.functions.GenerateReportFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @SpringBootApplication
 public class BbogCatRlaOpenaiBackTestingApplication {
 
-    private final GetFileJsonFunction getFileJsonFunction;
+    private final GenerateReportFunction generateReportFunction;
 
     @Autowired
-    public BbogCatRlaOpenaiBackTestingApplication(GetFileJsonFunction getFileJsonFunction) {
-        this.getFileJsonFunction = getFileJsonFunction;
+    public BbogCatRlaOpenaiBackTestingApplication(GenerateReportFunction generateReportFunction) {
+        this.generateReportFunction = generateReportFunction;
     }
 
     public static void main(String[] args) {
@@ -28,35 +30,20 @@ public class BbogCatRlaOpenaiBackTestingApplication {
 
     @Bean
     public Function<Map<String, Object>, Map<String, Object>> route() {
-        Gson gson = new Gson();
-
         return event -> {
             String path = (String) event.get("resource");
 
-            if ("/downloadFileJson".equalsIgnoreCase(path)) {
-                String body = (String) event.get("body");
+            if (path.equalsIgnoreCase(EndPointPaths.GENERATE_REPORT)) {
+                GenerateReportResponseDTO responseDTO = generateReportFunction.generateReport().get();
 
-                if (body == null) {
-                    return Map.of("statusCode", 400, "body", "{\"message\": \"Error: Body is null\"}");
-                }
-
-                GetFileJsonRequestDTO requestDTO = gson.fromJson(body, GetFileJsonRequestDTO.class);
-
-                GetFileJsonResponseDTO responseDTO = getFileJsonFunction.downloadFileJson().apply(requestDTO);
-
-                if (responseDTO != null) {
-                    return Map.of(
-                            "statusCode", responseDTO.getStatusCode(),
-                            "headers", responseDTO.getHeaders(),
-                            "body", responseDTO.getBody()
-                    );
-                } else {
-                    return Map.of("statusCode", 500, "body", "{\"message\": \"Error: Response DTO is null\"}");
-                }
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("statusCode", responseDTO.getStatusCode());
+                responseMap.put("headers", responseDTO.getHeaders());
+                responseMap.put("body", responseDTO.getBody());
+                return responseMap;
             }
 
-            return Map.of("statusCode", 404, "body", "{\"message\": \"Path not found\"}");
+            return Map.of("statusCode", 404, "body", "Ruta no encontrada");
         };
     }
-
 }

@@ -3,7 +3,7 @@ Se ha llevado a cabo una prueba de carga escalonada utilizando JMeter. En esta p
 Los resultados de esta prueba están representados en formato JSON. Con base en dichos resultados, necesito que generes un **informe técnico detallado** que contenga lo siguiente:
 
 ### 1. **Resumen General de la Prueba**:
-   - Describe el rendimiento general del sistema utilizando los datos del objeto "TotalPrueba" muestra los valores de este objeto en forma de lista.
+   - Describe el rendimiento general del sistema utilizando los datos del objeto "TotalPrueba" dentro del JSON, muestra los valores de este objeto en forma de lista, no es necesario que muestres los dats de entrada.
 
 ### 2. **Análisis Comparativo por Escenarios**:
    - Comparación entre los distintos escenarios y cómo el sistema reaccionó ante el aumento progresivo de la carga (solo Observaciones del Análisis Comparativo).
@@ -22,7 +22,3 @@ Por favor, utiliza los siguientes resultados JSON para generar este informe:
 {jsonData}
 
 Asegúrate de que el informe esté estructurado de manera clara y profesional, resaltando los hallazgos clave y haciendo recomendaciones precisas en función de los datos disponibles.
-
-
-
-//Indicar la configuración de la prueba

@@ -10,4 +10,4 @@ spring:
             temperature: 0.7
   cloud:
     function:
-      definition: downloadFileJson
+      definition: generateReport
