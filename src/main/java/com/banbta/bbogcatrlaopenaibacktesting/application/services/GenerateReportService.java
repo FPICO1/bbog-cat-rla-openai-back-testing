@@ -91,14 +91,10 @@ public class GenerateReportService {
 
         // Almacenar el informe generado en el caché y retornarlo
         cachedReport.put("generation", response);
-
-
-
         JsonObject jsonObject = new JsonObject();
 
         // Envolver el texto en un JSON válido
         jsonObject.addProperty("reportText", response);
-
 
         log.info("Archivo descargado y convertido exitosamente como texto JSON.");
         return jsonObject;

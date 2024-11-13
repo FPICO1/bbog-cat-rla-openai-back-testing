@@ -23,7 +23,7 @@
         <springAiVersion>1.0.0-M1</springAiVersion> <!-- Azure OpenAI -->
         <springCloudAzureVersion>5.14.0</springCloudAzureVersion> <!-- Azure -->
         <aws.sdk.version>2.28.22</aws.sdk.version>
-        <io.Netty.Version>4.1.108.Final</io.Netty.Version>
+        <io.netty.version>4.1.108.Final</io.netty.version>
     </properties>
 
     <repositories>
@@ -88,6 +88,21 @@
 
         </dependency>
 
+        <!-- DynamoDB -->
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb-enhanced</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
         <!--      Test      -->
 
         <dependency>
@@ -140,7 +155,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
-                <version>4.1.108.Final</version>
+                <version>${io.netty.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
