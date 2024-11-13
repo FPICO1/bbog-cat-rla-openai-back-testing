@@ -21,4 +21,11 @@ Por favor, utiliza los siguientes resultados JSON para generar este informe:
 **Resultados JSON**:
 {jsonData}
 
-Asegúrate de que el informe esté estructurado de manera clara y profesional, resaltando los hallazgos clave y haciendo recomendaciones precisas en función de los datos disponibles.
+Asegúrate de que el informe esté estructurado de manera clara y profesional, resaltando los hallazgos clave y haciendo recomendaciones precisas en función de los datos disponibles. Por favor no hagas conclusiones en cuanto a si el servicio está correcto o no.
+En cada paso limítate a responder sin repetir información enviada mediante este prompt. Quiero que me des esta respuesta en formato JSON con la siguiente estructura:
+{
+    "resumenGeneral": "",
+    "analisisComparativo": "",
+    "recomendacionesOptimizacion": "",
+    "observacionesEstabilidad": ""
+}
