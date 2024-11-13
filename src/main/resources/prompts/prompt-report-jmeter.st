@@ -1,24 +1,23 @@
-Se ha llevado a cabo una prueba de carga escalonada utilizando JMeter. En esta prueba, se han configurado múltiples escenarios, cada uno con una cantidad variable de hilos y tiempos predeterminados para evaluar el rendimiento del sistema bajo cargas progresivas.
+Se ha llevado a cabo una prueba de carga escalonada utilizando JMeter, configurando múltiples escenarios para evaluar el rendimiento del sistema bajo cargas progresivas.
 
-Los resultados de esta prueba están representados en formato JSON. Con base en dichos resultados, necesito que generes un **informe técnico detallado** que contenga lo siguiente:
+Los resultados de esta prueba están en formato JSON. Con base en dichos resultados, necesito que generes un informe técnico detallado con los siguientes puntos:
 
-### 1. **Resumen General de la Prueba**:
-   - Describe el rendimiento general del sistema utilizando los datos del objeto "TotalPrueba" dentro del JSON, muestra los valores de este objeto en forma de lista, no es necesario que muestres los dats de entrada.
-
-### 2. **Análisis Comparativo por Escenarios**:
-   - Comparación entre los distintos escenarios y cómo el sistema reaccionó ante el aumento progresivo de la carga (solo Observaciones del Análisis Comparativo).
-
-### 3. **Recomendaciones de Optimización**:
-   - Proporciona recomendaciones específicas para mejorar el rendimiento, tales como ajustes en la configuración de los escenarios, escalabilidad de la infraestructura, o mejoras en el código backend.
-   - Sugiere posibles formas de eliminar cuellos de botella identificados en los resultados.
-
-### 4. **Observaciones de Estabilidad y Comportamiento**:
-   - Analiza si se identificaron anomalías o comportamientos inesperados en algún escenario, como caídas en la tasa de éxito o respuestas inusualmente lentas.
-   - Comenta sobre la estabilidad del sistema bajo las diferentes cargas y si es capaz de manejar incrementos adicionales sin degradación significativa en el rendimiento.
-
+1. Resumen General de la Prueba:
+Describe el rendimiento general del sistema utilizando solo los datos del objeto "TotalPrueba" dentro del JSON. Los valores deben aparecer en un objeto JSON con las métricas principales.
+2. Análisis Comparativo por Escenarios:
+Presenta una lista JSON de observaciones sobre cómo el sistema reaccionó ante el aumento progresivo de la carga. Cada elemento debe ser una observación independiente en formato de texto.
+3. Recomendaciones de Optimización:
+Proporciona recomendaciones específicas en una lista JSON para mejorar el rendimiento. Cada recomendación debe ser un texto separado en la lista e incluir temas como ajustes de configuración, escalabilidad de la infraestructura, o mejoras en el código backend.
+4. Observaciones de Estabilidad y Comportamiento:
+Proporciona una lista JSON con observaciones sobre la estabilidad del sistema y cualquier anomalía. Cada observación debe ser un texto independiente en la lista.
 Por favor, utiliza los siguientes resultados JSON para generar este informe:
 
-**Resultados JSON**:
-{jsonData}
+Resultados JSON: {jsonData}
 
-Asegúrate de que el informe esté estructurado de manera clara y profesional, resaltando los hallazgos clave y haciendo recomendaciones precisas en función de los datos disponibles.
+Responde estrictamente en formato JSON con las siguientes claves principales y asegúrate de que cada una cumpla con el tipo de estructura que se pide:
+
+"resumen": Objeto con métricas generales de la prueba.
+"comparativo": Lista JSON de observaciones comparativas.
+"recomendaciones": Lista JSON de recomendaciones específicas.
+"observaciones": Lista JSON de observaciones sobre estabilidad y comportamiento.
+No incluyas ninguna conclusión general sobre si el servicio es aceptable, funcional o no funcional, y sigue el formato solicitado estrictamente. No incluyas la palabra 'json' en tu respuesta.
