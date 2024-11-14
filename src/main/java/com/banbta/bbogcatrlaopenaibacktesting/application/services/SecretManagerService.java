@@ -37,8 +37,11 @@ public class SecretManagerService {
             GetSecretValueResponse secretValueResponse = secretsManagerClient.getSecretValue(getSecretValueRequest);
             String secretJson = secretValueResponse.secretString();
             Map<String, String> secretsMap = objectMapper.readValue(secretJson, Map.class);
+
+            //Produccion
             this.apiKey = secretsMap.get("AZURE_OPENAI_API_KEY");
             this.endpoint = secretsMap.get("AZURE_OPENAI_ENDPOINT");
+
         } catch (IOException e) {
             throw new RuntimeException("Error loading secrets from AWS Secrets Manager", e);
         }

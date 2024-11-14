@@ -4,12 +4,19 @@ import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.DataReques
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.GenerateReportResponseDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.MessageResponseDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.application.services.GenerateReportService;
+import com.banbta.bbogcatrlaopenaibacktesting.domain.entitys.ReportAiEntity;
+import com.banbta.bbogcatrlaopenaibacktesting.domain.repository.ReportAiRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -25,15 +32,19 @@ public class GenerateReportFunction {
     public GenerateReportFunction( GenerateReportService generateReportService) {
         this.generateReportService = generateReportService;
     }
+
+
+
     @Bean
     public Function<DataRequestDTO, GenerateReportResponseDTO> generateReport()  {
+
+        GenerateReportResponseDTO generateReportResponseDTO = new GenerateReportResponseDTO();
+
 
         return dataRequestDTO -> {
 
 
             System.out.println("Datos enviados:  "+dataRequestDTO);
-
-            GenerateReportResponseDTO generateReportResponseDTO = new GenerateReportResponseDTO();
 
             try {
 

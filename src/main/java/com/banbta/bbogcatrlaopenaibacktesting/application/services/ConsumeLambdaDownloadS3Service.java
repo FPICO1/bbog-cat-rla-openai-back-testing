@@ -1,6 +1,6 @@
 package com.banbta.bbogcatrlaopenaibacktesting.application.services;
 
-import com.banbta.bbogcatrlaopenaibacktesting.application.common.EndPointPaths;
+import com.banbta.bbogcatrlaopenaibacktesting.common.EndPointPaths;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.DataRequestDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

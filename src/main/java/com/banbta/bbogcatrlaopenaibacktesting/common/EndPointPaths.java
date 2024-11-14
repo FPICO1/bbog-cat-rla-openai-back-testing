@@ -1,4 +1,4 @@
-package com.banbta.bbogcatrlaopenaibacktesting.application.common;
+package com.banbta.bbogcatrlaopenaibacktesting.common;
 
 public class EndPointPaths {
     private EndPointPaths(){

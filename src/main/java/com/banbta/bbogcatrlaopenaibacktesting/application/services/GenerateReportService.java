@@ -2,13 +2,12 @@ package com.banbta.bbogcatrlaopenaibacktesting.application.services;
 
 
 import com.azure.ai.openai.OpenAIClient;
-import com.azure.ai.openai.OpenAIClientBuilder;
-import com.azure.core.credential.AzureKeyCredential;
+
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.DataRequestDTO;
+import com.banbta.bbogcatrlaopenaibacktesting.domain.entitys.ReportAiEntity;
+import com.banbta.bbogcatrlaopenaibacktesting.domain.repository.ReportAiRepository;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.azure.openai.AzureOpenAiChatModel;
 import org.springframework.ai.azure.openai.AzureOpenAiChatOptions;
@@ -18,10 +17,10 @@ import org.stringtemplate.v4.ST;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,6 +31,7 @@ public class GenerateReportService {
     private final Map<String, Object> cachedReport = new ConcurrentHashMap<>();
     private final Gson gson;
     private final SecretManagerService secretManagerService;
+    private final ReportAiRepository reportAiRepository;
 
 
     @Autowired
@@ -39,11 +39,13 @@ public class GenerateReportService {
             ConsumeLambdaDownloadS3Service consumeLambdaDownloadS3Service,
             OpenAIClient openAIClient,
             Gson gson,
-            SecretManagerService secretManagerService) {
+            SecretManagerService secretManagerService,
+            ReportAiRepository reportAiRepository) {
 
         this.consumeLambdaDownloadS3Service = consumeLambdaDownloadS3Service;
         this.gson = gson;
         this.secretManagerService = secretManagerService;
+        this.reportAiRepository = reportAiRepository;
 
         // Configurar las opciones de Azure OpenAI
         AzureOpenAiChatOptions options = new AzureOpenAiChatOptions();
@@ -95,6 +97,21 @@ public class GenerateReportService {
 
         // Envolver el texto en un JSON válido
         jsonObject.addProperty("reportText", response);
+
+        System.out.println("Prueba Antony  "+ response);
+
+        //Envio de informacion
+
+        reportAiRepository.saveReportAi(new ReportAiEntity(
+                1L,
+                dataRequestDTO.getHistoryUser(),
+                dataRequestDTO.getUserName(),
+                dataRequestDTO.getEndPoint(),
+                dataRequestDTO.getEnvironment(),
+                gson.toJson(jsonData),//Data
+                gson.toJson(jsonObject),//Response
+                LocalDate.now()
+        ));
 
         log.info("Archivo descargado y convertido exitosamente como texto JSON.");
         return jsonObject;

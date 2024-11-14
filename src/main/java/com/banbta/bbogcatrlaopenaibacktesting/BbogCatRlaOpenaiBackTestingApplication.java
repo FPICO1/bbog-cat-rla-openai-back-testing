@@ -1,6 +1,6 @@
 package com.banbta.bbogcatrlaopenaibacktesting;
 
-import com.banbta.bbogcatrlaopenaibacktesting.application.common.EndPointPaths;
+import com.banbta.bbogcatrlaopenaibacktesting.common.EndPointPaths;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.DataRequestDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.GenerateReportResponseDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.web.functions.GenerateReportFunction;
