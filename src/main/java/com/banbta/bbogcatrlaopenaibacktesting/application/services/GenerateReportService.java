@@ -68,10 +68,13 @@ public class GenerateReportService {
             throw new Exception("El archivo prompt-report-jmeter.st no se encontró en el classpath.");
         }
 
-        String templateContent;
+        String templateContent = "";
         try (Scanner scanner = new Scanner(templateStream, StandardCharsets.UTF_8)) {
             templateContent = scanner.useDelimiter("\\A").next();
+        }catch (Exception e){
+            System.out.println("no entro al catch creado recientemente");
         }
+        System.out.println("templateContent"+templateContent);
 
         ST template = new ST(templateContent, '{', '}');
         template.add("jsonData", jsonData);
@@ -90,9 +93,6 @@ public class GenerateReportService {
 
         // Almacenar el informe generado en el caché y retornarlo
         cachedReport.put("generation", response);
-
-
-
         JsonObject jsonObject = new JsonObject();
 
         // Envolver el texto en un JSON válido

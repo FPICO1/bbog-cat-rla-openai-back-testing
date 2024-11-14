@@ -1,24 +1,12 @@
-Se ha llevado a cabo una prueba de carga escalonada utilizando JMeter. En esta prueba, se han configurado múltiples escenarios, cada uno con una cantidad variable de hilos y tiempos predeterminados para evaluar el rendimiento del sistema bajo cargas progresivas.
+Utiliza el siguiente "Resultados JSON" para generar un informe técnico que incluya:
+comparativo: Lista JSON de observaciones clave sobre cómo el sistema reaccionó al aumento de carga, enfocándote en tendencias generales y comportamientos significativos, sin detallar cada escenario individualmente. Cada observación debe ser un texto independiente.
+recomendaciones: Lista JSON de recomendaciones específicas para mejorar el rendimiento, incluyendo ajustes de configuración, escalabilidad de infraestructura y mejoras en el backend. Cada recomendación es un texto independiente.
+observaciones: Lista JSON con comentarios sobre la estabilidad del sistema y cualquier anomalía detectada. Cada observación es un texto independiente.
 
-Los resultados de esta prueba están representados en formato JSON. Con base en dichos resultados, necesito que generes un **informe técnico detallado** que contenga lo siguiente:
+Resultados JSON: {jsonData}
 
-### 1. **Resumen General de la Prueba**:
-   - Describe el rendimiento general del sistema utilizando los datos del objeto "TotalPrueba" dentro del JSON, muestra los valores de este objeto en forma de lista, no es necesario que muestres los dats de entrada.
-
-### 2. **Análisis Comparativo por Escenarios**:
-   - Comparación entre los distintos escenarios y cómo el sistema reaccionó ante el aumento progresivo de la carga (solo Observaciones del Análisis Comparativo).
-
-### 3. **Recomendaciones de Optimización**:
-   - Proporciona recomendaciones específicas para mejorar el rendimiento, tales como ajustes en la configuración de los escenarios, escalabilidad de la infraestructura, o mejoras en el código backend.
-   - Sugiere posibles formas de eliminar cuellos de botella identificados en los resultados.
-
-### 4. **Observaciones de Estabilidad y Comportamiento**:
-   - Analiza si se identificaron anomalías o comportamientos inesperados en algún escenario, como caídas en la tasa de éxito o respuestas inusualmente lentas.
-   - Comenta sobre la estabilidad del sistema bajo las diferentes cargas y si es capaz de manejar incrementos adicionales sin degradación significativa en el rendimiento.
-
-Por favor, utiliza los siguientes resultados JSON para generar este informe:
-
-**Resultados JSON**:
-{jsonData}
-
-Asegúrate de que el informe esté estructurado de manera clara y profesional, resaltando los hallazgos clave y haciendo recomendaciones precisas en función de los datos disponibles.
+Responde estrictamente en formato JSON con las claves principales:
+"comparativo"
+"recomendaciones"
+"observaciones"
+No incluyas conclusiones sobre la aceptabilidad o funcionalidad del servicio, y no incluyas la palabra 'json' en tu respuesta.
