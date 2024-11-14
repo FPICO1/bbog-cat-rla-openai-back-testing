@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -103,7 +104,7 @@ public class GenerateReportService {
         //Envio de informacion
 
         reportAiRepository.saveReportAi(new ReportAiEntity(
-                1L,
+                Math.abs(UUID.randomUUID().getMostSignificantBits()),//Linea que genera el automaticamente el id
                 dataRequestDTO.getHistoryUser(),
                 dataRequestDTO.getUserName(),
                 dataRequestDTO.getEndPoint(),

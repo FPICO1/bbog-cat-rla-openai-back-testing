@@ -13,7 +13,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbConve
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Setter
 @ToString
@@ -32,10 +32,9 @@ public class ReportAiEntity {
     private LocalDate dateExecute;
 
 
-
-
     @DynamoDbPartitionKey
     public Long getIdReportAi() {
+
         return idReportAi;
     }
 
