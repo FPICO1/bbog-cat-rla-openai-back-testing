@@ -18,6 +18,8 @@ import org.stringtemplate.v4.ST;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -102,16 +104,17 @@ public class GenerateReportService {
         System.out.println("Prueba Antony  "+ response);
 
         //Envio de informacion
+        LocalDateTime colombiaTime = LocalDateTime.now(ZoneId.of("America/Bogota"));
 
         reportAiRepository.saveReportAi(new ReportAiEntity(
                 Math.abs(UUID.randomUUID().getMostSignificantBits()),//Linea que genera el automaticamente el id
-                dataRequestDTO.getHistoryUser(),
+                dataRequestDTO.getHistoryUser().toUpperCase(),
                 dataRequestDTO.getUserName(),
                 dataRequestDTO.getEndPoint(),
                 dataRequestDTO.getEnvironment(),
                 gson.toJson(jsonData),//Data
                 gson.toJson(jsonObject),//Response
-                LocalDate.now()
+                colombiaTime
         ));
 
         log.info("Archivo descargado y convertido exitosamente como texto JSON.");

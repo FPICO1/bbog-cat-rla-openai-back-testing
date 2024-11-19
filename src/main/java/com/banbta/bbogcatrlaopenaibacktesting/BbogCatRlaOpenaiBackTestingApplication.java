@@ -1,9 +1,13 @@
 package com.banbta.bbogcatrlaopenaibacktesting;
 
+import com.banbta.bbogcatrlaopenaibacktesting.application.config.GsonConfig;
+import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.DataBdDynamoRequestDTO;
+import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.ApiResponse;
 import com.banbta.bbogcatrlaopenaibacktesting.common.EndPointPaths;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.request.DataRequestDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.application.dto.response.GenerateReportResponseDTO;
 import com.banbta.bbogcatrlaopenaibacktesting.web.functions.GenerateReportFunction;
+import com.banbta.bbogcatrlaopenaibacktesting.web.functions.OperationBdDynamoFunction;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +23,13 @@ import java.util.function.Function;
 public class BbogCatRlaOpenaiBackTestingApplication {
 
     private final GenerateReportFunction generateReportFunction;
+    private final OperationBdDynamoFunction operationBdDynamoFunction;
     private final Gson gson;
 
     @Autowired
-    public BbogCatRlaOpenaiBackTestingApplication(GenerateReportFunction generateReportFunction, Gson gson) {
+    public BbogCatRlaOpenaiBackTestingApplication(GenerateReportFunction generateReportFunction, OperationBdDynamoFunction operationBdDynamoFunction, Gson gson) {
         this.generateReportFunction = generateReportFunction;
+        this.operationBdDynamoFunction = operationBdDynamoFunction;
         this.gson = gson;
     }
 
@@ -38,35 +44,58 @@ public class BbogCatRlaOpenaiBackTestingApplication {
         return event -> {
             String path = (String) event.get("resource");
 
-            if (path.equalsIgnoreCase(EndPointPaths.GENERATE_REPORT)) {
+            Map<String, Object> responseMap = Map.of("statusCode", 404, "body", "Ruta no encontrada");
 
-                // Obtener el cuerpo del evento y deserializarlo
-                String body = (String) event.get("body"); // Extraer el cuerpo del event
-                DataRequestDTO dataRequestDTO = gson.fromJson(body, DataRequestDTO.class);
+            try {
+                if (path.equalsIgnoreCase(EndPointPaths.GENERATE_REPORT)) {
 
-                GenerateReportResponseDTO responseDTO = generateReportFunction.generateReport().apply(dataRequestDTO);
+                    String body = (String) event.get("body");
 
-                String jsonBody = responseDTO.getBody();
+                     // Extraer el cuerpo del event
+                    DataRequestDTO dataRequestDTO = gson.fromJson(body, DataRequestDTO.class);
 
-                // Verificar y limpiar comillas de inicio y fin
-                if (jsonBody.startsWith("\"") && jsonBody.endsWith("\"")) {
-                    // Eliminar las comillas de inicio y fin y reemplazar \" con "
-                    jsonBody = jsonBody.substring(1, jsonBody.length() - 1).replace("\\\"", "\"");
+                    GenerateReportResponseDTO responseDTO = generateReportFunction.generateReport().apply(dataRequestDTO);
+
+                    String jsonBody = responseDTO.getBody();
+
+                    // Verificar y limpiar comillas de inicio y fin
+                    if (jsonBody.startsWith("\"") && jsonBody.endsWith("\"")) {
+                        // Eliminar las comillas de inicio y fin y reemplazar \" con "
+                        jsonBody = jsonBody.substring(1, jsonBody.length() - 1).replace("\\\"", "\"");
+                    }
+
+                    System.out.println("despues del arreglos jsonBody : " + jsonBody);
+
+                    return gson.fromJson(responseDTO.getBody(), new TypeToken<Map<String, Object>>() {
+                    }.getType());
+
+                } else     if (path.equalsIgnoreCase(EndPointPaths.FIND_REPORTS_BY_HU)) {
+                    String body = (String) event.get("body");
+
+                    // Deserializar el cuerpo de la solicitud
+                    DataBdDynamoRequestDTO dataBdDynamoRequestDTO = gson.fromJson(body, DataBdDynamoRequestDTO.class);
+
+                    // Llamar a la función y obtener la respuesta
+                    GenerateReportResponseDTO responseDTO = operationBdDynamoFunction.findReportsByHistoryUser().apply(dataBdDynamoRequestDTO);
+
+                    // Deserializar el cuerpo de la respuesta en ApiResponse
+                    ApiResponse<?> apiResponse = gson.fromJson(responseDTO.getBody(), ApiResponse.class);
+
+                    // Convertir ApiResponse a Map para la respuesta
+                    responseMap = gson.fromJson(responseDTO.getBody(), new TypeToken<Map<String, Object>>() {}.getType());
+
+                    // Puedes agregar lógica adicional aquí si es necesario
                 }
-
-                System.out.println("despues del arreglos jsonBody : "+jsonBody);
-
-
-                // Deserializar directamente el JSON en un Map
-                //Map<String, Object> bodyJson = gson.fromJson(responseDTO.getBody(), new TypeToken<Map<String, Object>>() {}.getType());
-
-
-                // Specify the type as Map<String, Object>
-                return gson.fromJson(responseDTO.getBody(), new TypeToken<Map<String, Object>>() {}.getType());
-
+            } catch (Exception e) {
+                System.err.println("Error al procesar la solicitud: " + e.getMessage());
+                responseMap = Map.of("statusCode", 500, "body", "Error interno del servidor");
             }
 
-            return Map.of("statusCode", 404, "body", "Ruta no encontrada");
+            return responseMap;
         };
+
+
     }
+
+
 }

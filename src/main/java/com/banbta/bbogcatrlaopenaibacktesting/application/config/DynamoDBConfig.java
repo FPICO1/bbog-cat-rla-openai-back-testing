@@ -12,7 +12,9 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 public class DynamoDBConfig {
 
 
-    AwsBasicCredentials awsCreds = AwsBasicCredentials.create("AKIAXEFUNRQJAZVYT5R2", "FMlRvLgxZn9LbDR7DSeKgwsIqa+xIJd/y526bkfn");
+    AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+            "AKIAXEFUNRQJAZVYT5R2",
+            "FMlRvLgxZn9LbDR7DSeKgwsIqa+xIJd/y526bkfn");
 
 
     @Bean

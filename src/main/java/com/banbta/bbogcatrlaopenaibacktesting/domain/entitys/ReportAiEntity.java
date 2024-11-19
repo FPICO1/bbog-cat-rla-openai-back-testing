@@ -1,18 +1,14 @@
 package com.banbta.bbogcatrlaopenaibacktesting.domain.entitys;
 
 
-import com.banbta.bbogcatrlaopenaibacktesting.common.LocalDateConverter;
-import com.google.gson.JsonObject;
+import com.banbta.bbogcatrlaopenaibacktesting.common.LocalDateTimeConverter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbConvertedBy;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Setter
@@ -29,7 +25,7 @@ public class ReportAiEntity {
     private String environment;
     private String jsonData;          // JSON como Map
     private String jsonResponseAi;
-    private LocalDate dateExecute;
+    private LocalDateTime dateExecute;
 
 
     @DynamoDbPartitionKey
@@ -38,7 +34,7 @@ public class ReportAiEntity {
         return idReportAi;
     }
 
-
+    @DynamoDbSecondaryPartitionKey(indexNames = "historyUser-index")
     @DynamoDbAttribute("historyUser")
     public String getHistoryUser() {
         return historyUser;
@@ -68,8 +64,8 @@ public class ReportAiEntity {
     }
 
     @DynamoDbAttribute("dateExecute")
-    @DynamoDbConvertedBy(LocalDateConverter.class)
-    public LocalDate getDateExecute() {
+    @DynamoDbConvertedBy(LocalDateTimeConverter.class)
+    public LocalDateTime getDateExecute() {
         return dateExecute;
     }
 
