@@ -11,11 +11,6 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 @Configuration
 public class DynamoDBConfig {
 
-
-
-
-
-
     @Bean
     public DynamoDbClient dynamoDbClient() {
         return DynamoDbClient.builder()
