@@ -1,8 +1,0 @@
-spring:
-  ai:
-    azure:
-      openai:
-        api-key: f704a6178db24335ace4043d7c3224c4
-        endpoint: https://do-openai-service.openai.azure.com
-        deployment-name: doc3
-        temperature: 0.7
