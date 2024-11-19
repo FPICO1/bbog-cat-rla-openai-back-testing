@@ -2,8 +2,7 @@ package com.banbta.bbogcatrlaopenaibacktesting.application.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -15,8 +14,7 @@ public class DynamoDBConfig {
     public DynamoDbClient dynamoDbClient() {
         return DynamoDbClient.builder()
                 .region(Region.US_EAST_1) // Asegúrate de que coincide con tu región de AWS
-              //  .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .build();
+                       .build();
     }
 
     @Bean
