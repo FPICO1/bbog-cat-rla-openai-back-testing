@@ -1,5 +1,7 @@
 package com.banbta.bbogcatrlaopenaibacktesting.application.services;
 
+import com.banbta.bbogcatrlaopenaibacktesting.application.config.SecretManagerConfig;
+import com.banbta.bbogcatrlaopenaibacktesting.common.LinkSecretManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import java.util.Map;
 public class SecretManagerService {
 
     private final SecretsManagerClient secretsManagerClient;
-    private final GetSecretValueRequest getSecretValueRequest;
+    private final SecretManagerConfig secretManagerConfig;
     private final ObjectMapper objectMapper;
     private String apiKey;
     private String endpoint;
@@ -24,17 +26,21 @@ public class SecretManagerService {
 
     @Autowired
     public SecretManagerService(SecretsManagerClient secretsManagerClient,
-                                GetSecretValueRequest getSecretValueRequest,
+                                SecretManagerConfig secretManagerConfig,
                                 ObjectMapper objectMapper) {
         this.secretsManagerClient = secretsManagerClient;
-        this.getSecretValueRequest = getSecretValueRequest;
+        this.secretManagerConfig = secretManagerConfig;
         this.objectMapper = objectMapper;
         loadSecrets();
     }
 
     private void loadSecrets() {
         try {
-            GetSecretValueResponse secretValueResponse = secretsManagerClient.getSecretValue(getSecretValueRequest);
+
+            GetSecretValueResponse secretValueResponse =
+                    secretsManagerClient.getSecretValue(secretManagerConfig.getSecretValueRequest(LinkSecretManager.SECRET_NAME_AZURE_IA));
+
+
             String secretJson = secretValueResponse.secretString();
             Map<String, String> secretsMap = objectMapper.readValue(secretJson, Map.class);
 

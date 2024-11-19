@@ -11,7 +11,6 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueReques
 @Configuration
 public class SecretManagerConfig {
 
-    String secretName = "prod/itest/azureIA";
 
 
     @Bean
@@ -22,8 +21,8 @@ public class SecretManagerConfig {
 
     }
 
-    @Bean
-    public GetSecretValueRequest getSecretValueRequest() {
+
+    public GetSecretValueRequest getSecretValueRequest(String secretName) {
         return GetSecretValueRequest.builder()
                 .secretId(secretName)
                 .build();
