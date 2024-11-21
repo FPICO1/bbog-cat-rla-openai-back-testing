@@ -33,7 +33,6 @@ public class GenerateReportService {
     private final AzureOpenAiChatModel azureOpenAiChatModel;
     private final Map<String, Object> cachedReport = new ConcurrentHashMap<>();
     private final Gson gson;
-    private final SecretManagerService secretManagerService;
     private final ReportAiRepository reportAiRepository;
 
 
@@ -42,12 +41,10 @@ public class GenerateReportService {
             ConsumeLambdaDownloadS3Service consumeLambdaDownloadS3Service,
             OpenAIClient openAIClient,
             Gson gson,
-            SecretManagerService secretManagerService,
             ReportAiRepository reportAiRepository) {
 
         this.consumeLambdaDownloadS3Service = consumeLambdaDownloadS3Service;
         this.gson = gson;
-        this.secretManagerService = secretManagerService;
         this.reportAiRepository = reportAiRepository;
 
         // Configurar las opciones de Azure OpenAI
@@ -63,7 +60,11 @@ public class GenerateReportService {
 
 
         // Aca hay que traer el service de consumo del Lambda.
+
         JsonObject jsonData = consumeLambdaDownloadS3Service.getDataJson(dataRequestDTO);
+
+        System.out.println("JsonObject consumeLambdaDownloadS3Service Antony: "+jsonData);
+
 
         // Cargar el archivo de plantilla
         InputStream templateStream = getClass().getClassLoader().getResourceAsStream("prompts/prompt-report-jmeter.st");
